@@ -1,0 +1,19 @@
+<?php
+
+function getDb(): PDO
+{
+    static $pdo = null;
+
+    if ($pdo === null) {
+        $config = require __DIR__ . '/config.php';
+        $db = $config['db'];
+
+        $dsn = "pgsql:host={$db['host']};port={$db['port']};dbname={$db['name']}";
+        $pdo = new PDO($dsn, $db['user'], $db['pass'], [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        ]);
+    }
+
+    return $pdo;
+}

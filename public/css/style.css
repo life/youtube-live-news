@@ -1,0 +1,329 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #0f0f0f;
+    color: #e1e1e1;
+    min-height: 100vh;
+}
+
+header {
+    background: #1a1a1a;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    border-bottom: 1px solid #333;
+}
+
+header h1 {
+    font-size: 20px;
+    color: #ff4444;
+    white-space: nowrap;
+}
+
+nav {
+    display: flex;
+    gap: 8px;
+}
+
+nav a {
+    color: #aaa;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    transition: background 0.2s;
+}
+
+nav a:hover {
+    background: #333;
+    color: #fff;
+}
+
+nav a.active {
+    background: #333;
+    color: #fff;
+}
+
+#refreshBtn {
+    margin-left: auto;
+    background: #ff4444;
+    color: #fff;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+
+#refreshBtn:hover {
+    background: #cc3333;
+}
+
+#refreshBtn:disabled {
+    background: #666;
+    cursor: not-allowed;
+}
+
+main {
+    padding: 24px;
+    max-width: 1600px;
+    margin: 0 auto;
+}
+
+/* Stream Grid */
+.stream-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+}
+
+.stream-card {
+    background: #1a1a1a;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #333;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+}
+
+.stream-card.stream-active {
+    border-color: #ff4444;
+    box-shadow: 0 0 12px rgba(255, 68, 68, 0.3);
+}
+
+.stream-header {
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.live-badge {
+    background: #ff4444;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 4px;
+    letter-spacing: 0.5px;
+}
+
+.offline-badge {
+    background: #555;
+    color: #ccc;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+
+.channel-name {
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.stream-video {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 */
+    height: 0;
+}
+
+.stream-video iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* Loading */
+.loading {
+    text-align: center;
+    padding: 40px;
+    color: #aaa;
+    font-size: 16px;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: #888;
+    font-size: 16px;
+    grid-column: 1 / -1;
+}
+
+.empty-state a {
+    color: #ff4444;
+    text-decoration: none;
+}
+
+.empty-state a:hover {
+    text-decoration: underline;
+}
+
+/* Quality Form */
+.quality-form {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.quality-form label {
+    font-size: 14px;
+    color: #aaa;
+}
+
+.quality-form select {
+    background: #0f0f0f;
+    border: 1px solid #444;
+    color: #e1e1e1;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.quality-form select:focus {
+    outline: none;
+    border-color: #ff4444;
+}
+
+.save-indicator {
+    color: #4caf50;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+/* Settings */
+.settings-section {
+    background: #1a1a1a;
+    border-radius: 8px;
+    padding: 24px;
+    margin-bottom: 20px;
+    border: 1px solid #333;
+}
+
+.settings-section h2 {
+    font-size: 18px;
+    margin-bottom: 16px;
+    color: #fff;
+}
+
+.add-form {
+    display: flex;
+    gap: 12px;
+    align-items: flex-end;
+    flex-wrap: wrap;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+    min-width: 200px;
+}
+
+.form-group label {
+    font-size: 13px;
+    color: #aaa;
+}
+
+.form-group input {
+    background: #0f0f0f;
+    border: 1px solid #444;
+    color: #e1e1e1;
+    padding: 10px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #ff4444;
+}
+
+.add-form button {
+    background: #ff4444;
+    color: #fff;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+
+.add-form button:hover {
+    background: #cc3333;
+}
+
+/* Channel Table */
+.channel-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.channel-table th,
+.channel-table td {
+    text-align: left;
+    padding: 12px;
+    border-bottom: 1px solid #333;
+}
+
+.channel-table th {
+    color: #aaa;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.channel-table td {
+    font-size: 14px;
+}
+
+.btn-delete {
+    background: transparent;
+    color: #ff4444;
+    border: 1px solid #ff4444;
+    padding: 4px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: all 0.2s;
+}
+
+.btn-delete:hover {
+    background: #ff4444;
+    color: #fff;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    header {
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    #refreshBtn {
+        margin-left: 0;
+    }
+
+    .stream-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .add-form {
+        flex-direction: column;
+    }
+}
