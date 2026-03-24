@@ -170,6 +170,158 @@ function saveQuality(value) {
         });
 }
 
+// Recording functions
+function startRecordingAction() {
+    var channelSelect = document.getElementById('recordChannel');
+    var durationSelect = document.getElementById('recordDuration');
+    var btn = document.getElementById('startRecordBtn');
+
+    if (!channelSelect || !durationSelect) return;
+
+    btn.disabled = true;
+    btn.textContent = 'Başlatılıyor...';
+
+    fetch('/api/recording.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            channel_id: parseInt(channelSelect.value),
+            duration: parseInt(durationSelect.value)
+        })
+    })
+        .then(function (res) {
+            if (!res.ok) return res.json().then(function (d) { throw new Error(d.error); });
+            return res.json();
+        })
+        .then(function () {
+            window.location.reload();
+        })
+        .catch(function (err) {
+            alert('Kayıt başlatılamadı: ' + err.message);
+            btn.disabled = false;
+            btn.textContent = 'Kaydı Başlat';
+        });
+}
+
+function stopRecordingAction(id) {
+    if (!confirm('Kaydı durdurmak istediğinize emin misiniz?')) return;
+
+    fetch('/api/recording.php', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: id, action: 'stop' })
+    })
+        .then(function (res) { return res.json(); })
+        .then(function () {
+            window.location.reload();
+        })
+        .catch(function (err) {
+            alert('Hata: ' + err.message);
+        });
+}
+
+function deleteRecordingAction(id) {
+    if (!confirm('Bu kaydı silmek istediğinize emin misiniz?')) return;
+
+    fetch('/api/recording.php', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: id })
+    })
+        .then(function (res) { return res.json(); })
+        .then(function (data) {
+            if (data.deleted) {
+                var row = document.querySelector('#recordingsContainer tr[data-id="' + id + '"]');
+                if (row) row.remove();
+
+                var tbody = document.querySelector('#recordingsTable tbody');
+                if (tbody && tbody.children.length === 0) {
+                    document.getElementById('recordingsContainer').innerHTML =
+                        '<p class="empty-state-inline" id="noRecordings">Henüz kayıt yapılmamış.</p>';
+                }
+            }
+        })
+        .catch(function (err) {
+            alert('Hata: ' + err.message);
+        });
+}
+
+function formatFileSize(bytes) {
+    if (bytes >= 1073741824) return (bytes / 1073741824).toFixed(1) + ' GB';
+    if (bytes >= 1048576) return (bytes / 1048576).toFixed(1) + ' MB';
+    if (bytes >= 1024) return (bytes / 1024).toFixed(1) + ' KB';
+    return bytes + ' B';
+}
+
+function refreshRecordings() {
+    fetch('/api/recording.php')
+        .then(function (res) { return res.json(); })
+        .then(function (recordings) {
+            var container = document.getElementById('recordingsContainer');
+            if (!container) return;
+
+            if (!recordings.length) {
+                container.innerHTML = '<p class="empty-state-inline" id="noRecordings">Henüz kayıt yapılmamış.</p>';
+                return;
+            }
+
+            var html = '<table class="channel-table" id="recordingsTable"><thead><tr>'
+                + '<th>Kanal</th><th>Süre</th><th>Durum</th><th>Boyut</th><th>Tarih</th><th>İşlem</th>'
+                + '</tr></thead><tbody>';
+
+            var hasActive = false;
+            recordings.forEach(function (rec) {
+                var statusHtml = '';
+                if (rec.status === 'recording') {
+                    statusHtml = '<span class="recording-badge">Kaydediliyor...</span>';
+                    hasActive = true;
+                } else if (rec.status === 'completed') {
+                    statusHtml = '<span class="completed-badge">Tamamlandı</span>';
+                } else if (rec.status === 'stopped') {
+                    statusHtml = '<span class="offline-badge">Durduruldu</span>';
+                } else {
+                    statusHtml = '<span class="offline-badge">Hata</span>';
+                }
+
+                var sizeStr = rec.filesize > 0 ? formatFileSize(rec.filesize) : '-';
+                var date = new Date(rec.started_at);
+                var dateStr = date.toLocaleDateString('tr-TR') + ' ' + date.toLocaleTimeString('tr-TR', {hour:'2-digit', minute:'2-digit'});
+
+                var actions = '';
+                if (rec.status === 'recording') {
+                    actions += '<button class="btn-stop" onclick="stopRecordingAction(' + rec.id + ')">Durdur</button> ';
+                }
+                if ((rec.status === 'completed' || rec.status === 'stopped') && rec.filesize > 0) {
+                    actions += '<a href="/recordings/' + rec.filename + '" class="btn-download" download>İndir</a> ';
+                }
+                actions += '<button class="btn-delete" onclick="deleteRecordingAction(' + rec.id + ')">Sil</button>';
+
+                html += '<tr data-id="' + rec.id + '">'
+                    + '<td>' + rec.channel_name + '</td>'
+                    + '<td>' + rec.duration + ' dk</td>'
+                    + '<td>' + statusHtml + '</td>'
+                    + '<td>' + sizeStr + '</td>'
+                    + '<td>' + dateStr + '</td>'
+                    + '<td class="action-buttons">' + actions + '</td>'
+                    + '</tr>';
+            });
+
+            html += '</tbody></table>';
+            container.innerHTML = html;
+
+            if (!hasActive && recordingPollInterval) {
+                clearInterval(recordingPollInterval);
+                recordingPollInterval = null;
+            }
+        })
+        .catch(function () {});
+}
+
+var recordingPollInterval = null;
+if (document.getElementById('recordingsContainer')) {
+    recordingPollInterval = setInterval(refreshRecordings, 5000);
+}
+
 // Add channel form
 var form = document.getElementById('addChannelForm');
 if (form) {

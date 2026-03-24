@@ -29,6 +29,7 @@ $gridColumns = (int)($stmt->fetchColumn() ?: 4);
         <h1>YouTube Live News</h1>
         <nav>
             <a href="/" class="active">Canlı Yayınlar</a>
+            <a href="/recording.php">Canlı Kayıt</a>
             <a href="/settings.php">Ayarlar</a>
         </nav>
         <button id="refreshBtn" onclick="refreshStreams()">Yenile</button>

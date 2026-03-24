@@ -15,6 +15,21 @@ CREATE TABLE IF NOT EXISTS settings (
 
 INSERT INTO settings (key, value) VALUES ('quality', 'default') ON CONFLICT DO NOTHING;
 
+CREATE TABLE IF NOT EXISTS recordings (
+    id SERIAL PRIMARY KEY,
+    channel_id INTEGER NOT NULL REFERENCES channels(id) ON DELETE CASCADE,
+    channel_name VARCHAR(255) NOT NULL,
+    video_id VARCHAR(50),
+    duration INTEGER NOT NULL,
+    filename VARCHAR(500),
+    filesize BIGINT DEFAULT 0,
+    status VARCHAR(20) DEFAULT 'recording',
+    pid INTEGER,
+    started_at TIMESTAMP DEFAULT NOW(),
+    completed_at TIMESTAMP,
+    created_at TIMESTAMP DEFAULT NOW()
+);
+
 -- Varsayılan kanallar
 INSERT INTO channels (name, channel_id) VALUES
     ('CNN Türk', '@cnnturk'),

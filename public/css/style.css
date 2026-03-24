@@ -100,7 +100,8 @@ main {
 
 .stream-card.stream-active {
     border-color: #ff4444;
-    box-shadow: 0 0 12px rgba(255, 68, 68, 0.3);
+    border-width: 2px;
+    box-shadow: 0 0 20px rgba(255, 68, 68, 0.6), 0 0 40px rgba(255, 68, 68, 0.3);
 }
 
 .stream-header {
@@ -311,6 +312,129 @@ main {
 .btn-delete:hover {
     background: #ff4444;
     color: #fff;
+}
+
+/* Recording */
+.record-form {
+    display: flex;
+    gap: 12px;
+    align-items: flex-end;
+    flex-wrap: wrap;
+}
+
+.record-form select {
+    background: #0f0f0f;
+    border: 1px solid #444;
+    color: #e1e1e1;
+    padding: 10px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.record-form select:focus {
+    outline: none;
+    border-color: #ff4444;
+}
+
+.record-form button,
+#startRecordBtn {
+    background: #ff4444;
+    color: #fff;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+
+.record-form button:hover {
+    background: #cc3333;
+}
+
+.record-form button:disabled {
+    background: #666;
+    cursor: not-allowed;
+}
+
+.recording-badge {
+    background: #ff4444;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 4px;
+    animation: pulse 1.5s infinite;
+}
+
+.completed-badge {
+    background: #4caf50;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.btn-stop {
+    background: transparent;
+    color: #ff9800;
+    border: 1px solid #ff9800;
+    padding: 4px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: all 0.2s;
+}
+
+.btn-stop:hover {
+    background: #ff9800;
+    color: #fff;
+}
+
+.btn-download {
+    display: inline-block;
+    background: transparent;
+    color: #4caf50;
+    border: 1px solid #4caf50;
+    padding: 4px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.btn-download:hover {
+    background: #4caf50;
+    color: #fff;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.empty-state-inline {
+    color: #888;
+    font-size: 14px;
+}
+
+.empty-state-inline a {
+    color: #ff4444;
+    text-decoration: none;
+}
+
+.empty-state-inline a:hover {
+    text-decoration: underline;
 }
 
 /* Responsive */

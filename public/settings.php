@@ -33,6 +33,7 @@ $currentHoverUnmute = $stmt->fetchColumn() ?: '1';
         <h1>YouTube Live News</h1>
         <nav>
             <a href="/">Canlı Yayınlar</a>
+            <a href="/recording.php">Canlı Kayıt</a>
             <a href="/settings.php" class="active">Ayarlar</a>
         </nav>
     </header>
