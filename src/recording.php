@@ -2,8 +2,8 @@
 
 function startRecording(PDO $db, int $channelDbId, int $duration): array
 {
-    if (!in_array($duration, [5, 10, 15])) {
-        throw new InvalidArgumentException('Süre 5, 10 veya 15 dakika olmalı');
+    if ($duration < 1 || $duration > 10) {
+        throw new InvalidArgumentException('Süre 1-10 dakika arasında olmalı');
     }
 
     $stmt = $db->prepare('SELECT * FROM channels WHERE id = ? AND is_live = true');
@@ -27,13 +27,20 @@ function startRecording(PDO $db, int $channelDbId, int $duration): array
     $watchUrl = 'https://www.youtube.com/watch?v=' . $videoId;
     $durationSeconds = $duration * 60;
 
+    $logPath = '/tmp/recording_' . time() . '.log';
+    $tsPath = $outputPath . '.ts';
     $cmd = sprintf(
-        'nohup yt-dlp -f "best[height<=720]/best" --no-part '
-        . '--download-sections "*0-%d" --force-keyframes-at-cuts '
-        . '-o %s %s > /dev/null 2>&1 & echo $!',
+        'nohup bash -c "timeout %d yt-dlp -f \"best[height<=720]/best\" --no-part '
+        . '-o %s %s 2>&1; '
+        . 'ffmpeg -i %s -c copy -movflags +faststart %s -y 2>&1; '
+        . 'rm -f %s" > %s 2>&1 & echo $!',
         $durationSeconds,
+        escapeshellarg($tsPath),
+        escapeshellarg($watchUrl),
+        escapeshellarg($tsPath),
         escapeshellarg($outputPath),
-        escapeshellarg($watchUrl)
+        escapeshellarg($tsPath),
+        escapeshellarg($logPath)
     );
 
     $pid = trim(shell_exec($cmd));

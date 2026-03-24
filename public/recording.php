@@ -3,6 +3,13 @@ require_once __DIR__ . '/../src/db.php';
 require_once __DIR__ . '/../src/channels.php';
 require_once __DIR__ . '/../src/recording.php';
 
+function formatSize(int $bytes): string {
+    if ($bytes >= 1073741824) return round($bytes / 1073741824, 1) . ' GB';
+    if ($bytes >= 1048576) return round($bytes / 1048576, 1) . ' MB';
+    if ($bytes >= 1024) return round($bytes / 1024, 1) . ' KB';
+    return $bytes . ' B';
+}
+
 $db = getDb();
 $channels = getAllChannels($db);
 $liveChannels = array_filter($channels, fn($c) => $c['is_live']);
@@ -45,9 +52,9 @@ $recordings = getRecordings($db);
                     <div class="form-group">
                         <label for="recordDuration">Süre</label>
                         <select id="recordDuration">
-                            <option value="5">5 Dakika</option>
-                            <option value="10">10 Dakika</option>
-                            <option value="15">15 Dakika</option>
+                            <?php for ($i = 1; $i <= 10; $i++): ?>
+                                <option value="<?= $i ?>"><?= $i ?> Dakika</option>
+                            <?php endfor; ?>
                         </select>
                     </div>
                     <button id="startRecordBtn" onclick="startRecordingAction()">Kaydı Başlat</button>
@@ -111,11 +118,3 @@ $recordings = getRecordings($db);
     <script src="/js/app.js?v=<?= time() ?>"></script>
 </body>
 </html>
-<?php
-function formatSize(int $bytes): string {
-    if ($bytes >= 1073741824) return round($bytes / 1073741824, 1) . ' GB';
-    if ($bytes >= 1048576) return round($bytes / 1048576, 1) . ' MB';
-    if ($bytes >= 1024) return round($bytes / 1024, 1) . ' KB';
-    return $bytes . ' B';
-}
-?>

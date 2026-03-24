@@ -190,14 +190,18 @@ function startRecordingAction() {
         })
     })
         .then(function (res) {
-            if (!res.ok) return res.json().then(function (d) { throw new Error(d.error); });
-            return res.json();
+            return res.text().then(function (text) {
+                var data;
+                try { data = JSON.parse(text); } catch (e) { throw new Error('Sunucu yanıtı: ' + text.substring(0, 200)); }
+                if (!res.ok) throw new Error(data.error || 'HTTP ' + res.status + ': ' + JSON.stringify(data));
+                return data;
+            });
         })
         .then(function () {
             window.location.reload();
         })
         .catch(function (err) {
-            alert('Kayıt başlatılamadı: ' + err.message);
+            alert('Kayıt başlatılamadı:\n\n' + err.message);
             btn.disabled = false;
             btn.textContent = 'Kaydı Başlat';
         });
