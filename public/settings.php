@@ -80,7 +80,7 @@ $currentHoverUnmute = $stmt->fetchColumn() ?: '1';
             <div class="quality-form">
                 <label for="gridColumns">Canlı yayınlar satır başına kaç sütun gösterilsin:</label>
                 <select id="gridColumns" onchange="saveGridColumns(this.value)">
-                    <?php foreach ([3, 4, 5, 6] as $col): ?>
+                    <?php foreach ([2, 3, 4, 5, 6] as $col): ?>
                         <option value="<?= $col ?>" <?= $currentGridColumns == $col ? 'selected' : '' ?>><?= $col ?> Sütun</option>
                     <?php endforeach; ?>
                 </select>

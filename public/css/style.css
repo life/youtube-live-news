@@ -84,6 +84,7 @@ main {
     gap: 16px;
 }
 
+.stream-grid.grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
 .stream-grid.grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
 .stream-grid.grid-cols-4 { grid-template-columns: repeat(4, 1fr); }
 .stream-grid.grid-cols-5 { grid-template-columns: repeat(5, 1fr); }
