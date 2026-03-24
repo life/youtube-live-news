@@ -84,6 +84,11 @@ main {
     gap: 16px;
 }
 
+.stream-grid.grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
+.stream-grid.grid-cols-4 { grid-template-columns: repeat(4, 1fr); }
+.stream-grid.grid-cols-5 { grid-template-columns: repeat(5, 1fr); }
+.stream-grid.grid-cols-6 { grid-template-columns: repeat(6, 1fr); }
+
 .stream-card {
     background: #1a1a1a;
     border-radius: 8px;

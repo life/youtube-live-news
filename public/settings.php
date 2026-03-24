@@ -9,6 +9,16 @@ $channels = getAllChannels($db);
 $stmt = $db->prepare('SELECT value FROM settings WHERE key = ?');
 $stmt->execute(['quality']);
 $currentQuality = $stmt->fetchColumn() ?: 'default';
+
+// Get current grid columns setting
+$stmt = $db->prepare('SELECT value FROM settings WHERE key = ?');
+$stmt->execute(['grid_columns']);
+$currentGridColumns = $stmt->fetchColumn() ?: '4';
+
+// Get hover unmute setting
+$stmt = $db->prepare('SELECT value FROM settings WHERE key = ?');
+$stmt->execute(['hover_unmute']);
+$currentHoverUnmute = $stmt->fetchColumn() ?: '1';
 ?>
 <!DOCTYPE html>
 <html lang="tr">
@@ -49,6 +59,31 @@ $currentQuality = $stmt->fetchColumn() ?: 'default';
                     <?php endforeach; ?>
                 </select>
                 <span id="qualitySaved" class="save-indicator" style="display:none;">Kaydedildi</span>
+            </div>
+        </section>
+
+        <section class="settings-section">
+            <h2>Fare ile Ses Kontrolü</h2>
+            <div class="quality-form">
+                <label for="hoverUnmute">Fare yayının üzerine gelince otomatik sesi aç:</label>
+                <select id="hoverUnmute" onchange="saveHoverUnmute(this.value)">
+                    <option value="1" <?= $currentHoverUnmute === '1' ? 'selected' : '' ?>>Açık</option>
+                    <option value="0" <?= $currentHoverUnmute === '0' ? 'selected' : '' ?>>Kapalı</option>
+                </select>
+                <span id="hoverSaved" class="save-indicator" style="display:none;">Kaydedildi</span>
+            </div>
+        </section>
+
+        <section class="settings-section">
+            <h2>Ekran Düzeni</h2>
+            <div class="quality-form">
+                <label for="gridColumns">Canlı yayınlar satır başına kaç sütun gösterilsin:</label>
+                <select id="gridColumns" onchange="saveGridColumns(this.value)">
+                    <?php foreach ([3, 4, 5, 6] as $col): ?>
+                        <option value="<?= $col ?>" <?= $currentGridColumns == $col ? 'selected' : '' ?>><?= $col ?> Sütun</option>
+                    <?php endforeach; ?>
+                </select>
+                <span id="gridSaved" class="save-indicator" style="display:none;">Kaydedildi</span>
             </div>
         </section>
 
@@ -106,6 +141,6 @@ $currentQuality = $stmt->fetchColumn() ?: 'default';
         </section>
     </main>
 
-    <script src="/js/app.js"></script>
+    <script src="/js/app.js?v=<?= time() ?>"></script>
 </body>
 </html>

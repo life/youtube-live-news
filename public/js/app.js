@@ -33,6 +33,8 @@ function setupHover(videoId) {
     if (!card) return;
 
     card.addEventListener('mouseenter', function () {
+        if (typeof hoverUnmute !== 'undefined' && !hoverUnmute) return;
+
         // Mute all others, unmute this one
         Object.keys(players).forEach(function (id) {
             if (players[id] && typeof players[id].mute === 'function') {
@@ -96,6 +98,54 @@ function deleteChannel(id) {
         })
         .catch(function (err) {
             alert('Hata: ' + err.message);
+        });
+}
+
+// Save hover unmute setting
+function saveHoverUnmute(value) {
+    var indicator = document.getElementById('hoverSaved');
+
+    fetch('/api/settings.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ key: 'hover_unmute', value: String(value) })
+    })
+        .then(function (res) {
+            if (!res.ok) throw new Error('Sunucu hatası: ' + res.status);
+            return res.json();
+        })
+        .then(function () {
+            if (indicator) {
+                indicator.style.display = 'inline';
+                setTimeout(function () { indicator.style.display = 'none'; }, 2000);
+            }
+        })
+        .catch(function (err) {
+            alert('Hata: ' + err.message);
+        });
+}
+
+// Save grid columns setting
+function saveGridColumns(value) {
+    var indicator = document.getElementById('gridSaved');
+
+    fetch('/api/settings.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ key: 'grid_columns', value: String(value) })
+    })
+        .then(function (res) {
+            if (!res.ok) throw new Error('Sunucu hatası: ' + res.status);
+            return res.json();
+        })
+        .then(function () {
+            if (indicator) {
+                indicator.style.display = 'inline';
+                setTimeout(function () { indicator.style.display = 'none'; }, 2000);
+            }
+        })
+        .catch(function (err) {
+            alert('Ekran düzeni kaydedilemedi: ' + err.message);
         });
 }
 

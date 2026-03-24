@@ -10,6 +10,11 @@ $liveChannels = array_filter($channels, fn($c) => $c['is_live']);
 $stmt = $db->prepare('SELECT value FROM settings WHERE key = ?');
 $stmt->execute(['quality']);
 $quality = $stmt->fetchColumn() ?: 'default';
+
+// Get grid columns setting
+$stmt = $db->prepare('SELECT value FROM settings WHERE key = ?');
+$stmt->execute(['grid_columns']);
+$gridColumns = (int)($stmt->fetchColumn() ?: 4);
 ?>
 <!DOCTYPE html>
 <html lang="tr">
@@ -32,7 +37,7 @@ $quality = $stmt->fetchColumn() ?: 'default';
     <main>
         <div id="loading" class="loading" style="display:none;">Canlı yayınlar kontrol ediliyor...</div>
 
-        <div id="grid" class="stream-grid">
+        <div id="grid" class="stream-grid grid-cols-<?= $gridColumns ?>">
             <?php if (empty($liveChannels)): ?>
                 <div id="emptyState" class="empty-state">
                     <?php if (empty($channels)): ?>
@@ -68,6 +73,12 @@ $quality = $stmt->fetchColumn() ?: 'default';
             return $m[1] ?? '';
         }, $liveChannels))) ?>;
         var streamQuality = <?= json_encode($quality) ?>;
+        var hoverUnmute = <?php
+            $stmt2 = $db->prepare('SELECT value FROM settings WHERE key = ?');
+            $stmt2->execute(['hover_unmute']);
+            $hu = $stmt2->fetchColumn() ?: '1';
+            echo $hu === '1' ? 'true' : 'false';
+        ?>;
     </script>
     <script src="/js/app.js"></script>
 </body>
