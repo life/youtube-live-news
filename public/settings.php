@@ -32,7 +32,8 @@ $currentHoverUnmute = $stmt->fetchColumn() ?: '1';
     <header>
         <h1>YouTube Live News</h1>
         <nav>
-            <a href="/">Canlı Yayınlar</a>
+            <a href="/">Canlı TR</a>
+            <a href="/live-en.php">Canlı EN</a>
             <a href="/recording.php">Canlı Kayıt</a>
             <a href="/settings.php" class="active">Ayarlar</a>
         </nav>
@@ -99,6 +100,13 @@ $currentHoverUnmute = $stmt->fetchColumn() ?: '1';
                     <label for="channel_id">YouTube Kanal ID</label>
                     <input type="text" id="channel_id" name="channel_id" placeholder="@cabortime veya UCxxxxxxxxx" required>
                 </div>
+                <div class="form-group">
+                    <label for="category">Grup</label>
+                    <select id="category" name="category">
+                        <option value="tr">TR</option>
+                        <option value="en">EN</option>
+                    </select>
+                </div>
                 <button type="submit">Ekle</button>
             </form>
         </section>
@@ -114,6 +122,7 @@ $currentHoverUnmute = $stmt->fetchColumn() ?: '1';
                             <tr>
                                 <th>Kanal Adı</th>
                                 <th>Kanal ID</th>
+                                <th>Grup</th>
                                 <th>Durum</th>
                                 <th>İşlem</th>
                             </tr>
@@ -123,6 +132,11 @@ $currentHoverUnmute = $stmt->fetchColumn() ?: '1';
                                 <tr data-id="<?= $channel['id'] ?>">
                                     <td><?= htmlspecialchars($channel['name']) ?></td>
                                     <td><?= htmlspecialchars($channel['channel_id']) ?></td>
+                                    <td>
+                                        <span class="category-badge category-<?= htmlspecialchars($channel['category'] ?? 'tr') ?>">
+                                            <?= strtoupper(htmlspecialchars($channel['category'] ?? 'tr')) ?>
+                                        </span>
+                                    </td>
                                     <td>
                                         <?php if ($channel['is_live']): ?>
                                             <span class="live-badge">CANLI</span>

@@ -334,13 +334,15 @@ if (form) {
 
         var name = document.getElementById('name').value.trim();
         var channelId = document.getElementById('channel_id').value.trim();
+        var categoryEl = document.getElementById('category');
+        var category = categoryEl ? categoryEl.value : 'tr';
 
         if (!name || !channelId) return;
 
         fetch('/api/channels.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name: name, channel_id: channelId })
+            body: JSON.stringify({ name: name, channel_id: channelId, category: category })
         })
             .then(function (res) {
                 if (!res.ok) return res.json().then(function (d) { throw new Error(d.error); });

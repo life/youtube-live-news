@@ -2,6 +2,7 @@ CREATE TABLE IF NOT EXISTS channels (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     channel_id VARCHAR(100) NOT NULL UNIQUE,
+    category VARCHAR(10) DEFAULT 'tr',
     live_url VARCHAR(500),
     is_live BOOLEAN DEFAULT FALSE,
     updated_at TIMESTAMP DEFAULT NOW(),
@@ -30,17 +31,40 @@ CREATE TABLE IF NOT EXISTS recordings (
     created_at TIMESTAMP DEFAULT NOW()
 );
 
--- Varsayılan kanallar
-INSERT INTO channels (name, channel_id) VALUES
-    ('CNN Türk', '@cnnturk'),
-    ('TRT Haber', '@trthaber'),
-    ('NTV', '@NTV'),
-    ('Haber Global', '@haberglobal'),
-    ('Atv Haber', '@Ahaber'),
-    ('TV100', '@tv100'),
-    ('Tvnet', '@TVNET'),
-    ('Halk TV', '@/@Halktvkanali'),
-    ('Sözcü TV', '@Sozcutelevizyonu'),
-    ('Ülke Tv', '@ulketv'),
-    ('Tgrt Haber', '@tgrthaber')
+-- Varsayılan TR kanalları
+INSERT INTO channels (name, channel_id, category) VALUES
+    ('CNN Türk', '@cnnturk', 'tr'),
+    ('TRT Haber', '@trthaber', 'tr'),
+    ('NTV', '@NTV', 'tr'),
+    ('Haber Global', '@haberglobal', 'tr'),
+    ('Atv Haber', '@Ahaber', 'tr'),
+    ('TV100', '@tv100', 'tr'),
+    ('Tvnet', '@TVNET', 'tr'),
+    ('Halk TV', '@Halktvkanali', 'tr'),
+    ('Sözcü TV', '@Sozcutelevizyonu', 'tr'),
+    ('Ülke Tv', '@ulketv', 'tr'),
+    ('Tgrt Haber', '@tgrthaber', 'tr')
+ON CONFLICT DO NOTHING;
+
+-- Varsayılan EN kanalları
+INSERT INTO channels (name, channel_id, category) VALUES
+    ('CNN International', '@cnni', 'en'),
+    ('BBC News', '@BBCNews', 'en'),
+    ('Al Jazeera English', '@AlJazeeraEnglish', 'en'),
+    ('Sky News', '@SkyNews', 'en'),
+    ('Fox News', '@FoxNews', 'en'),
+    ('CNBC', '@CNBC', 'en'),
+    ('ABC News', '@ABCNews', 'en'),
+    ('DW News', '@DWNews', 'en'),
+    ('France 24 English', '@FRANCE24English', 'en'),
+    ('Euronews', '@euronews', 'en'),
+    ('TRT World', '@TRTWorld', 'en'),
+    ('WION', '@WIONews', 'en'),
+    ('Bloomberg', '@Bloomberg', 'en'),
+    ('NBC News', '@NBCNews', 'en'),
+    ('CBS News', '@CBSNews', 'en'),
+    ('CNA', '@channelnewsasia', 'en'),
+    ('India Today', '@IndiaToday', 'en'),
+    ('GB News', '@GBNewsOnline', 'en'),
+    ('LiveNOW from FOX', '@LiveNOWFOX', 'en')
 ON CONFLICT DO NOTHING;

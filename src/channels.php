@@ -1,20 +1,25 @@
 <?php
 
-function getAllChannels(PDO $db): array
+function getAllChannels(PDO $db, ?string $category = null): array
 {
-    $stmt = $db->query('SELECT * FROM channels ORDER BY created_at DESC');
+    if ($category) {
+        $stmt = $db->prepare('SELECT * FROM channels WHERE category = ? ORDER BY created_at DESC');
+        $stmt->execute([$category]);
+    } else {
+        $stmt = $db->query('SELECT * FROM channels ORDER BY created_at DESC');
+    }
     return $stmt->fetchAll();
 }
 
-function addChannel(PDO $db, string $name, string $channelId): array
+function addChannel(PDO $db, string $name, string $channelId, string $category = 'tr'): array
 {
     // Ensure channel_id starts with @
     if (!str_starts_with($channelId, '@') && !str_starts_with($channelId, 'UC')) {
         $channelId = '@' . $channelId;
     }
 
-    $stmt = $db->prepare('INSERT INTO channels (name, channel_id) VALUES (?, ?) RETURNING *');
-    $stmt->execute([$name, $channelId]);
+    $stmt = $db->prepare('INSERT INTO channels (name, channel_id, category) VALUES (?, ?, ?) RETURNING *');
+    $stmt->execute([$name, $channelId, $category]);
     return $stmt->fetch();
 }
 

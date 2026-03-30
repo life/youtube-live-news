@@ -10,7 +10,8 @@ $method = $_SERVER['REQUEST_METHOD'];
 
 try {
     if ($method === 'GET') {
-        echo json_encode(getAllChannels($db));
+        $category = $_GET['category'] ?? null;
+        echo json_encode(getAllChannels($db, $category));
 
     } elseif ($method === 'POST') {
         $input = json_decode(file_get_contents('php://input'), true);
@@ -21,7 +22,8 @@ try {
             exit;
         }
 
-        $channel = addChannel($db, $input['name'], $input['channel_id']);
+        $category = $input['category'] ?? 'tr';
+        $channel = addChannel($db, $input['name'], $input['channel_id'], $category);
         http_response_code(201);
         echo json_encode($channel);
 

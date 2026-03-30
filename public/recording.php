@@ -13,6 +13,11 @@ function formatSize(int $bytes): string {
 $db = getDb();
 $channels = getAllChannels($db);
 $liveChannels = array_filter($channels, fn($c) => $c['is_live']);
+$liveByCategory = [];
+foreach ($liveChannels as $ch) {
+    $cat = $ch['category'] ?? 'tr';
+    $liveByCategory[$cat][] = $ch;
+}
 checkAllActiveRecordings($db);
 $recordings = getRecordings($db);
 ?>
@@ -28,7 +33,8 @@ $recordings = getRecordings($db);
     <header>
         <h1>YouTube Live News</h1>
         <nav>
-            <a href="/">Canlı Yayınlar</a>
+            <a href="/">Canlı TR</a>
+            <a href="/live-en.php">Canlı EN</a>
             <a href="/recording.php" class="active">Canlı Kayıt</a>
             <a href="/settings.php">Ayarlar</a>
         </nav>
@@ -44,9 +50,20 @@ $recordings = getRecordings($db);
                     <div class="form-group">
                         <label for="recordChannel">Kanal</label>
                         <select id="recordChannel">
-                            <?php foreach ($liveChannels as $ch): ?>
-                                <option value="<?= $ch['id'] ?>"><?= htmlspecialchars($ch['name']) ?></option>
-                            <?php endforeach; ?>
+                            <?php if (!empty($liveByCategory['tr'])): ?>
+                                <optgroup label="TR">
+                                    <?php foreach ($liveByCategory['tr'] as $ch): ?>
+                                        <option value="<?= $ch['id'] ?>"><?= htmlspecialchars($ch['name']) ?></option>
+                                    <?php endforeach; ?>
+                                </optgroup>
+                            <?php endif; ?>
+                            <?php if (!empty($liveByCategory['en'])): ?>
+                                <optgroup label="EN">
+                                    <?php foreach ($liveByCategory['en'] as $ch): ?>
+                                        <option value="<?= $ch['id'] ?>"><?= htmlspecialchars($ch['name']) ?></option>
+                                    <?php endforeach; ?>
+                                </optgroup>
+                            <?php endif; ?>
                         </select>
                     </div>
                     <div class="form-group">

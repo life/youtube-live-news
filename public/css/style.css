@@ -131,6 +131,24 @@ main {
     border-radius: 4px;
 }
 
+.category-badge {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 4px;
+    letter-spacing: 0.5px;
+}
+
+.category-tr {
+    background: #1e88e5;
+    color: #fff;
+}
+
+.category-en {
+    background: #ff9800;
+    color: #fff;
+}
+
 .channel-name {
     font-weight: 600;
     font-size: 14px;
